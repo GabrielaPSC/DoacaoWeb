@@ -1,0 +1,16 @@
+body {
+    background-image: url("../images/heart-pattern.jpg");
+    background-repeat: repeat;
+}
+
+.card {
+    min-width: 40%;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    min-width: 60%;
+}
+
+#map {
+   width: 100%;        
+   height: 200px;
+}

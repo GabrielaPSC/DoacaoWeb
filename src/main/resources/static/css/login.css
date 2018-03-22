@@ -1,0 +1,11 @@
+body {
+    background-image: url("../images/caridade.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    background-size: cover;
+}
+
+.card {
+    min-width: 40%;
+}

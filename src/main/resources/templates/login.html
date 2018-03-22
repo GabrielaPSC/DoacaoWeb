@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <!-- Custom fonts for this template -->
+        <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet"/>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+        
+        <link href="css/floating-labels.css" rel="stylesheet"/>
+        <link href="css/login.css" rel="stylesheet"/>
+    </head>
+    <body>
+        
+        <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Doação</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/cadastroinstituicao">Cadastre-se</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Log In</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+        
+        <div class="card">
+            <div class="card-body">
+                <form class="form-signin">
+                    <div class="text-center mb-4">
+                      <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"/>
+                      <h1 class="h3 mb-3 font-weight-normal">Doação</h1>
+                      <p>Faça uma boa ação</p>
+                    </div>
+
+                    <div class="form-label-group">
+                      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required" autofocus="autofocus"/>
+                      <label for="inputEmail">Email</label>
+                    </div>
+
+                    <div class="form-label-group">
+                      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required"/>
+                      <label for="inputPassword">Senha</label>
+                    </div>
+
+                    <div class="checkbox mb-3">
+                      <label>
+                        <input type="checkbox" value="remember-me"/> Remember me
+                      </label>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
+                  </form>
+                </div>
+            </div>
+    </body>
+</html>
