@@ -19,6 +19,9 @@ public class Geolocation {
     private Integer latitude;
     private Integer longitude;
 
+    public Geolocation() {
+    }
+
     public Geolocation(Integer latitude, Integer longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

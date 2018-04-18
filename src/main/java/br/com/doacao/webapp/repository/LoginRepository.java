@@ -5,10 +5,13 @@
  */
 package br.com.doacao.webapp.repository;
 
+import br.com.doacao.webapp.entity.Login;
+import org.springframework.data.repository.CrudRepository;
+
 /**
  *
  * @author Gabriela Santos
  */
-public interface LoginRepository {
+public interface LoginRepository extends CrudRepository<Login, Integer> {
     
 }

@@ -5,10 +5,13 @@
  */
 package br.com.doacao.webapp.repository;
 
+import br.com.doacao.webapp.entity.Geolocation;
+import org.springframework.data.repository.CrudRepository;
+
 /**
  *
  * @author Gabriela Santos
  */
-public interface GeolocationRepository {
+public interface GeolocationRepository extends CrudRepository<Geolocation, Integer> {
     
 }

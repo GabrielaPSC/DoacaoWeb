@@ -37,6 +37,9 @@ public class Instituicao {
     @OneToMany
     private List<Documento> documentos;
 
+    public Instituicao() {
+    }
+
     public Instituicao(Login login, String nome, Endereco endereco, TipoInstituicao tipo, Geolocation geolocation, List<Telefone> telefones, List<Documento> documentos) {
         this.login = login;
         this.nome = nome;

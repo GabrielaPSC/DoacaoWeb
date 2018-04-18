@@ -25,6 +25,9 @@ public class Endereco {
     private String pais;
     private String codigo_postal;
 
+    public Endereco() {
+    }
+
     public Endereco(String endereco, String numero, String complemento, String bairro, String cidade, String estado, String pais, String codigo_postal) {
         this.endereco = endereco;
         this.numero = numero;

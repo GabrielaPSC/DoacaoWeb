@@ -5,10 +5,13 @@
  */
 package br.com.doacao.webapp.repository;
 
+import br.com.doacao.webapp.entity.Endereco;
+import org.springframework.data.repository.CrudRepository;
+
 /**
  *
  * @author Gabriela Santos
  */
-public interface EnderecoRepository {
+public interface EnderecoRepository extends CrudRepository<Endereco, Integer> {
     
 }
