@@ -1,9 +1,11 @@
 package br.com.doacao.webapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import util.View;
 
 /**
  *
@@ -16,12 +18,24 @@ public class Endereco {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     
+    @JsonView({View.InstituicaoDetalhada.class})
     private String endereco;
+    
+    @JsonView({View.InstituicaoDetalhada.class})
     private String numero;
+    
+    @JsonView({View.InstituicaoDetalhada.class})
     private String complemento;
+    
+    @JsonView({View.InstituicaoDetalhada.class})
     private String bairro;
+    
+    @JsonView({View.InstituicaoDetalhada.class})
     private String cidade;
+    
+    @JsonView({View.InstituicaoDetalhada.class})
     private String estado;
+    
     private String pais;
     private String codigo_postal;
 

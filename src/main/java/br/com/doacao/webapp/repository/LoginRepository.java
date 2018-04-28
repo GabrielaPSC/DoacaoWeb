@@ -12,6 +12,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author Gabriela Santos
  */
-public interface LoginRepository extends CrudRepository<Login, Integer> {
+public interface LoginRepository extends CrudRepository<Login, String> {
     
 }

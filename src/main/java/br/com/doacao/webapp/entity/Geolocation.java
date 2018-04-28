@@ -1,9 +1,11 @@
 package br.com.doacao.webapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import util.View;
 
 /**
  *
@@ -16,7 +18,10 @@ public class Geolocation {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private Integer latitude;
+    
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private Integer longitude;
 
     public Geolocation() {

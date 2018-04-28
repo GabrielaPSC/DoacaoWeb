@@ -1,5 +1,6 @@
 package br.com.doacao.webapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,31 +8,41 @@ import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Id;
+import util.View;
 
 /**
  *
  * @author Gabriela Santos
+ * 
+ * Representação de uma instituição de caridade
  */
 @Entity
 public class Instituicao {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private Integer id;
     
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private String nome;
+    
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private TipoInstituicao tipo;
     
     @OneToOne
     private Login login;
     
     @OneToOne
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private Endereco endereco;
     
     @OneToOne
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private Geolocation geolocation;
     
     @OneToMany
+    @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
     private List<Telefone> telefones;
     
     @OneToMany

@@ -23,5 +23,4 @@ public enum TipoInstituicao {
     public String toString() {
         return tipo;
     }
-        
 }
