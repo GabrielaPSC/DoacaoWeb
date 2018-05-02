@@ -27,6 +27,10 @@ public class LoginController {
 
     @RequestMapping(value = "/logar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity logar(@RequestBody Login login) {
+        if (login == null) {
+            return ResponseEntity.badRequest().body("Credenciais inválidas");
+        }
+        
         Login usuario = loginRepository.findOne(login.getUsuario());
         
         if (usuario == null) {

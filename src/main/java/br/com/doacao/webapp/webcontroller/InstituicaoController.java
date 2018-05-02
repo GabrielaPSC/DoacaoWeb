@@ -73,4 +73,9 @@ public class InstituicaoController {
             return ResponseEntity.badRequest().body("Erro ao recuperar instituições");
         }
     }
+    
+    @RequestMapping("/dash")
+    public String dash() {
+        return "dash";
+    }
 }
