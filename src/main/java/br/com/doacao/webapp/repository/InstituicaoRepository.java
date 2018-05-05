@@ -5,7 +5,6 @@
  */
 package br.com.doacao.webapp.repository;
 
-
 import br.com.doacao.webapp.entity.Instituicao;
 import org.springframework.data.repository.CrudRepository;
 
