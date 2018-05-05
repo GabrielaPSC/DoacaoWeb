@@ -1,6 +1,9 @@
 package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Instituicao;
+import br.com.doacao.webapp.entity.Login;
+import br.com.doacao.webapp.entity.Endereco;
+import br.com.doacao.webapp.entity.Geolocation;
 import br.com.doacao.webapp.repository.EnderecoRepository;
 import br.com.doacao.webapp.repository.GeolocationRepository;
 import br.com.doacao.webapp.repository.InstituicaoRepository;
@@ -44,15 +47,72 @@ public class InstituicaoController {
     }
     
     @RequestMapping(value = "/cadastrar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity cadastrar(@RequestBody Instituicao instituicao) {
-        //return ResponseEntity.badRequest().body("qual campo esta errado");
-        
-       loginRepository.save(instituicao.getLogin());
-       enderecoRepository.save(instituicao.getEndereco());
-       geolocationRepository.save(instituicao.getGeolocation());
-       instituicaoRepositor.save(instituicao);
-       return ResponseEntity.ok("Cadastro realizado com sucesso!");
-    }
+    public ResponseEntity cadastrar(@RequestBody Instituicao instituicao) { 
+       Login login = new Login();
+       Login usuario = loginRepository.findOne(login.getUsuario());
+       if (instituicao.getLogin() == null){
+ 	     return ResponseEntity.badRequest().body("Credencial inválida.");
+       }
+       if(usuario.getUsuario() == null){
+            return ResponseEntity.badRequest().body("Campo Usuário inválida.");            
+        }
+       if (login.getSenha().equals(login.getSenha())){
+            return ResponseEntity.ok("ok");
+        }      
+       loginRepository.save(instituicao.getLogin()); 
+
+
+       
+       Endereco endereco = new Endereco();
+       if (instituicao.getEndereco() == null){
+           return ResponseEntity.badRequest().body("Credenciais Inválidas.");
+       }
+       if (endereco.getEndereco() == null){
+           return ResponseEntity.badRequest().body("Endereço da instituição inválido."); 
+       }
+       if (endereco.getNumero() == null){
+           return ResponseEntity.badRequest().body("Número da instituição inválido."); 
+       }
+       if (endereco.getBairro() == null){
+           return ResponseEntity.badRequest().body("Bairro da instituição inválido."); 
+       }
+       if (endereco.getCidade() == null){
+           return ResponseEntity.badRequest().body("Cidade da instituição inválida."); 
+       }
+       if (endereco.getEstado() == null){
+           return ResponseEntity.badRequest().body("Estado da instituição inválido."); 
+       }
+       if (endereco.getPais() == null){
+           return ResponseEntity.badRequest().body("País da instituição inválido."); 
+       }
+       enderecoRepository.save(instituicao.getEndereco()); 
+
+       
+       
+       Geolocation geolocation = new Geolocation();
+       if (instituicao.getGeolocation() == null){
+ 	   return ResponseEntity.badRequest().body("Localização da instituição inválido.");
+       }
+       if ((geolocation.getLatitude() == null)||(geolocation.getLongitude() == null)){
+           return ResponseEntity.badRequest().body("Latitudde e/ou Longitude da instituição inválido.");
+       }
+       geolocationRepository.save(instituicao.getGeolocation()); 
+
+      if (instituicao.getNome() == null){
+           return ResponseEntity.badRequest().body("Nome da instituição inválido.");
+       }
+       if(instituicao.getTelefones() == null){
+           return ResponseEntity.badRequest().body("Telefone da instituição inválido.");
+       }
+       if(instituicao.getTipo() == null){
+           return ResponseEntity.badRequest().body("Tipo da instituição inválido.");
+       }
+       if(instituicao.getDocumentos() == null){
+           return ResponseEntity.badRequest().body("Documentos da instituição inválidos.");
+       }
+       instituicaoRepositor.save(instituicao); 
+       return ResponseEntity.ok("Cadastro realizado com sucesso!"); 
+    } 
     
     @JsonView(View.Instituicao.class)
     @RequestMapping(value = "/all", method = RequestMethod.GET)
