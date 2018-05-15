@@ -13,11 +13,8 @@ function logar() {
         data: JSON.stringify(login),
         contentType: "application/JSON",
         success: function(data){
-            if (data == "ok"){
-                document.location.href = "/instituicao/dash";
-            } else {
-                alert(data);
-            }
+            localStorage.setItem("token", data)
+            document.location.href = "/instituicao/dash?token=" + data;
         },
         error: function(data){
             alert(data.responseText);

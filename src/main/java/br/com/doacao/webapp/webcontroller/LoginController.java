@@ -2,6 +2,7 @@ package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Login;
 import br.com.doacao.webapp.entity.TokenData;
+import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class LoginController {
     
     private final LoginRepository loginRepository;
     private final TokenDataRepository tokenDataRepository;
-    
+            
     @Autowired
     public LoginController(LoginRepository loginRepository, TokenDataRepository tokenDataRepository) {
         this.loginRepository = loginRepository;
@@ -43,11 +44,11 @@ public class LoginController {
             return ResponseEntity.badRequest().body("Credenciais inválidas");
         }
         
-        if (usuario.getSenha().equals(login.getSenha())) {
+        if (usuario.getSenha().equals(login.getSenha())) {           
             try {
-                TokenData tokenData = CipherHelper.generateTokenData(login);
+                TokenData tokenData = CipherHelper.generateTokenData(usuario);
                 tokenDataRepository.save(tokenData);
-                return ResponseEntity.ok(tokenData);
+                return ResponseEntity.ok(tokenData.getToken());
             } catch (CipherHelperException ex) {
                 return ResponseEntity.badRequest().body(ex.getMessage());
             }

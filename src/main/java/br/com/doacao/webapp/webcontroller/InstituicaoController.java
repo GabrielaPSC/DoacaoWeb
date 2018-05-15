@@ -1,10 +1,13 @@
 package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Instituicao;
+import br.com.doacao.webapp.entity.Login;
+import br.com.doacao.webapp.entity.TokenData;
 import br.com.doacao.webapp.repository.EnderecoRepository;
 import br.com.doacao.webapp.repository.GeolocationRepository;
 import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
+import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,13 +32,15 @@ public class InstituicaoController {
     private final EnderecoRepository enderecoRepository;
     private final GeolocationRepository geolocationRepository;
     private final LoginRepository loginRepository;
+    private final TokenDataRepository tokenDataRepository;
 
     @Autowired
-    public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository) {
+    public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository) {
         this.instituicaoRepositor = instituicaoRepositor;
         this.enderecoRepository = enderecoRepository;
         this.geolocationRepository = geolocationRepository;
         this.loginRepository = loginRepository;
+        this.tokenDataRepository = tokenDataRepository;
     }
     
     @RequestMapping("/cadastro")
@@ -50,7 +55,14 @@ public class InstituicaoController {
        loginRepository.save(instituicao.getLogin());
        enderecoRepository.save(instituicao.getEndereco());
        geolocationRepository.save(instituicao.getGeolocation());
-       instituicaoRepositor.save(instituicao);
+       
+       Instituicao instituicaoSalva = instituicaoRepositor.save(instituicao);
+        
+       Login login = instituicaoSalva.getLogin();
+       login.setInstituicao(instituicao);
+       
+       loginRepository.save(login);
+               
        return ResponseEntity.ok("Cadastro realizado com sucesso!");
     }
     
@@ -75,7 +87,18 @@ public class InstituicaoController {
     }
     
     @RequestMapping("/dash")
-    public String dash() {
+    public String dash(String token) {
+        TokenData tokenData = tokenDataRepository.findOne(token);
+        
+        if (tokenData == null) {
+            return "login";
+        }
+        
+        if (tokenData.getInstituicao() == null) {
+            tokenDataRepository.delete(tokenData);
+            return "login";
+        }
+        
         return "dash";
     }
 }

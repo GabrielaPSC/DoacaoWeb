@@ -39,5 +39,9 @@ public class Login {
     public Instituicao getInstituicao() {
         return instituicao;
     }
+
+    public void setInstituicao(Instituicao instituicao) {
+        this.instituicao = instituicao;
+    }
     
 }
