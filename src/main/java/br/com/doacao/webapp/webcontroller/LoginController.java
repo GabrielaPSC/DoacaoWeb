@@ -1,7 +1,9 @@
 package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Login;
+import br.com.doacao.webapp.entity.TokenData;
 import br.com.doacao.webapp.repository.LoginRepository;
+import br.com.doacao.webapp.repository.TokenDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import util.CipherHelper;
+import util.exceptions.CipherHelperException;
 
 /**
  *
@@ -19,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginController {
     
     private final LoginRepository loginRepository;
-
+    private final TokenDataRepository tokenDataRepository;
+    
     @Autowired
-    public LoginController(LoginRepository loginRepository) {
+    public LoginController(LoginRepository loginRepository, TokenDataRepository tokenDataRepository) {
         this.loginRepository = loginRepository;
+        this.tokenDataRepository = tokenDataRepository;
     }
 
     @RequestMapping(value = "/logar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +44,13 @@ public class LoginController {
         }
         
         if (usuario.getSenha().equals(login.getSenha())) {
-            return ResponseEntity.ok("ok");
+            try {
+                TokenData tokenData = CipherHelper.generateTokenData(login);
+                tokenDataRepository.save(tokenData);
+                return ResponseEntity.ok(tokenData);
+            } catch (CipherHelperException ex) {
+                return ResponseEntity.badRequest().body(ex.getMessage());
+            }
         }
         
         return ResponseEntity.badRequest().body("Credenciais inválidas");

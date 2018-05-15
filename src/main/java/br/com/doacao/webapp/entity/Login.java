@@ -2,6 +2,7 @@ package br.com.doacao.webapp.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -15,6 +16,9 @@ public class Login {
     @Id
     private String usuario;
     private String senha;
+    
+    @OneToOne
+    private Instituicao instituicao;
 
     public Login() {
     }
@@ -30,6 +34,10 @@ public class Login {
 
     public String getSenha() {
         return senha;
+    }
+
+    public Instituicao getInstituicao() {
+        return instituicao;
     }
     
 }
