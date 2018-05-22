@@ -9,6 +9,7 @@ import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.java.swing.plaf.windows.resources.windows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -87,18 +88,7 @@ public class InstituicaoController {
     }
     
     @RequestMapping("/dash")
-    public String dash(String token) {
-        TokenData tokenData = tokenDataRepository.findOne(token);
-        
-        if (tokenData == null) {
-            return "login";
-        }
-        
-        if (tokenData.getInstituicao() == null) {
-            tokenDataRepository.delete(tokenData);
-            return "login";
-        }
-        
+    public String dash() {
         return "dash";
     }
 }
