@@ -41,7 +41,7 @@ public class CrossOriginRequestFilter implements Filter {
         
         
         HttpServletRequest httpServletRequest = (HttpServletRequest)req;
-        if(httpServletRequest.getRequestURL().toString().contains("/dash")){
+        if(httpServletRequest.getRequestURL().toString().contains("/dash/")){
         
             String token = httpServletRequest.getHeader("Authorization");
             if (token != null && tokenDataRepository.exists(token)) {

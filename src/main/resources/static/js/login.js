@@ -13,23 +13,7 @@ function logar() {
         data: JSON.stringify(login),
         contentType: "application/JSON",
         success: function(data){
-            localStorage.setItem("token", data)
-        },
-        error: function(data){
-            alert(data.responseText);
-        }
-    });
-}
-
-function abrirDash() {
-    $.ajax({
-        method: "GET",
-        url: "/instituicao/dash",
-        data: JSON.stringify(login),
-        contentType: "application/JSON",
-        headers: {"Authorization": localStorage.getItem('token')},
-        success: function(data){
-            localStorage.setItem("token", data)
+            localStorage.setItem("token", data);
             document.location.href = "/instituicao/dash";
         },
         error: function(data){
@@ -37,3 +21,4 @@ function abrirDash() {
         }
     });
 }
+//headers: {"Authorization": localStorage.getItem('token')},
