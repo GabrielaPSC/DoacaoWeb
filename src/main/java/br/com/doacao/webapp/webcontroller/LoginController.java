@@ -53,6 +53,7 @@ public class LoginController {
                 Map<String, Object> data = new HashMap<>();
                 data.put("token", tokenData.getToken());
                 data.put("instituicaoId", tokenData.getInstituicao().getId());
+                data.put("instituicaoNome", tokenData.getInstituicao().getNome());
                 
                 return ResponseEntity.ok(data);
             } catch (CipherHelperException ex) {

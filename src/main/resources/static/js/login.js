@@ -15,6 +15,7 @@ function logar() {
         success: function(data){
             localStorage.setItem("token", data.token);
             localStorage.setItem("instituicaoId", data.instituicaoId);
+            localStorage.setItem("instituicaoNome", data.instituicaoNome);
             document.location.href = "/instituicao/dash";
         },
         error: function(data){

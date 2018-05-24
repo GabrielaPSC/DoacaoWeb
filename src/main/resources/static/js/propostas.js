@@ -1,4 +1,7 @@
-$(document).ready(baixarPropostas);
+$(document).ready(function(){
+    $("#instituicaoNome").text(localStorage.getItem("instituicaoNome"));
+    baixarPropostas();
+});
 
 var propostas = [];
 
