@@ -2,9 +2,10 @@ package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Login;
 import br.com.doacao.webapp.entity.TokenData;
-import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,12 @@ public class LoginController {
             try {
                 TokenData tokenData = CipherHelper.generateTokenData(usuario);
                 tokenDataRepository.save(tokenData);
-                return ResponseEntity.ok(tokenData.getToken());
+                
+                Map<String, Object> data = new HashMap<>();
+                data.put("token", tokenData.getToken());
+                data.put("instituicaoId", tokenData.getInstituicao().getId());
+                
+                return ResponseEntity.ok(data);
             } catch (CipherHelperException ex) {
                 return ResponseEntity.badRequest().body(ex.getMessage());
             }

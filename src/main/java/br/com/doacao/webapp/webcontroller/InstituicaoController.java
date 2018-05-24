@@ -1,17 +1,16 @@
 package br.com.doacao.webapp.webcontroller;
 
 import br.com.doacao.webapp.entity.Instituicao;
-import br.com.doacao.webapp.entity.TokenData;
 import br.com.doacao.webapp.entity.Login;
 import br.com.doacao.webapp.entity.Endereco;
-import br.com.doacao.webapp.entity.Geolocation;
+import br.com.doacao.webapp.entity.Proposta;
 import br.com.doacao.webapp.repository.EnderecoRepository;
 import br.com.doacao.webapp.repository.GeolocationRepository;
 import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
+import br.com.doacao.webapp.repository.PropostaRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.sun.java.swing.plaf.windows.resources.windows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +35,16 @@ public class InstituicaoController {
     private final GeolocationRepository geolocationRepository;
     private final LoginRepository loginRepository;
     private final TokenDataRepository tokenDataRepository;
+    private final PropostaRepository propostaRepository;
 
     @Autowired
-    public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository) {
+    public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository, PropostaRepository propostaRepository) {
         this.instituicaoRepositor = instituicaoRepositor;
         this.enderecoRepository = enderecoRepository;
         this.geolocationRepository = geolocationRepository;
         this.loginRepository = loginRepository;
         this.tokenDataRepository = tokenDataRepository;
+        this.propostaRepository = propostaRepository;
     }
 
     @RequestMapping("/cadastro")
@@ -137,5 +138,20 @@ public class InstituicaoController {
     @RequestMapping("/dash")
     public String dash() {
         return "dash";
+    }
+    
+    @RequestMapping("/propostas")
+    public String propostas() {
+        return "propostas";
+    }
+    
+    @JsonView(View.Proposta.class)
+    @RequestMapping(value = "/dash/propostas", method = RequestMethod.GET)
+    public ResponseEntity findAllPropostasByInstituicaoId(Integer instituicaoId) {
+        try {
+            return ResponseEntity.ok(propostaRepository.findAllByInstituicaoIdAndDataDeferimentoIsNull(instituicaoId));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
+        }
     }
 }

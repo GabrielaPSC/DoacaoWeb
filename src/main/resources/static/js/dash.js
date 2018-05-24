@@ -13,8 +13,7 @@ function logar() {
         data: JSON.stringify(login),
         contentType: "application/JSON",
         success: function(data){
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("instituicaoId", data.instituicaoId);
+            localStorage.setItem("token", data);
             document.location.href = "/instituicao/dash";
         },
         error: function(data){
@@ -22,3 +21,4 @@ function logar() {
         }
     });
 }
+//headers: {"Authorization": localStorage.getItem('token')},
