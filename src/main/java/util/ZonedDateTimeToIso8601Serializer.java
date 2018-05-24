@@ -16,7 +16,7 @@ public class ZonedDateTimeToIso8601Serializer extends JsonSerializer<ZonedDateTi
 
     @Override
     public void serialize(ZonedDateTime value, JsonGenerator generator, SerializerProvider serializers) throws IOException, JsonProcessingException {
-        generator.writeString(value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        generator.writeString(value.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
     }
 
 }

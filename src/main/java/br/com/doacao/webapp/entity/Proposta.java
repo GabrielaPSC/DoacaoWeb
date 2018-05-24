@@ -40,7 +40,6 @@ public class Proposta {
     private Integer quantidade;
     
     @JsonSerialize(using = ZonedDateTimeToIso8601Serializer.class)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXX")
     @JsonView(View.Proposta.class)
     private ZonedDateTime dataProposta = ZonedDateTime.now();
     

@@ -1,3 +1,7 @@
+table.dataTable .btn {
+    color: white;
+}
+
 table.dataTable {
   clear: both;
   margin-top: 6px !important;
