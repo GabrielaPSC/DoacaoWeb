@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 import util.View;
 import util.ZonedDateTimeToIso8601Serializer;
+import util.ZonedDateTimeUtils;
 
 /**
  *
@@ -46,6 +47,8 @@ public class Proposta {
     @JsonSerialize(using = ZonedDateTimeToIso8601Serializer.class)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXX")
     private ZonedDateTime dataDeferimento;
+    
+    private Boolean deferimento;
     
     @ManyToOne
     private Instituicao instituicao;
@@ -98,4 +101,11 @@ public class Proposta {
         return instituicao;
     }
     
+    public String getDataPropostaFormatada() {
+        if (dataProposta == null) {
+            return null;
+        }
+        
+        return ZonedDateTimeUtils.toDateString(dataProposta);
+    }
 }

@@ -11,6 +11,10 @@ import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.PropostaRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import util.DTO.QuantidadePropostaDTO;
 import util.View;
 
 /**
@@ -30,7 +35,7 @@ import util.View;
 @Controller
 public class InstituicaoController {
 
-    private final InstituicaoRepository instituicaoRepositor;
+    private final InstituicaoRepository instituicaoRepository;
     private final EnderecoRepository enderecoRepository;
     private final GeolocationRepository geolocationRepository;
     private final LoginRepository loginRepository;
@@ -39,7 +44,7 @@ public class InstituicaoController {
 
     @Autowired
     public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository, PropostaRepository propostaRepository) {
-        this.instituicaoRepositor = instituicaoRepositor;
+        this.instituicaoRepository = instituicaoRepositor;
         this.enderecoRepository = enderecoRepository;
         this.geolocationRepository = geolocationRepository;
         this.loginRepository = loginRepository;
@@ -105,7 +110,7 @@ public class InstituicaoController {
         enderecoRepository.save(instituicao.getEndereco());
         geolocationRepository.save(instituicao.getGeolocation());
 
-        Instituicao instituicaoSalva = instituicaoRepositor.save(instituicao);
+        Instituicao instituicaoSalva = instituicaoRepository.save(instituicao);
 
         Login login = instituicaoSalva.getLogin();
         login.setInstituicao(instituicao);
@@ -119,7 +124,7 @@ public class InstituicaoController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity findAll() {
         try {
-            return ResponseEntity.ok(instituicaoRepositor.findAll());
+            return ResponseEntity.ok(instituicaoRepository.findAll());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar instituições");
         }
@@ -129,7 +134,7 @@ public class InstituicaoController {
     @RequestMapping(value = "/detalhes", method = RequestMethod.GET)
     public ResponseEntity findDetalhes(@RequestParam Integer instituicaoId) {
         try {
-            return ResponseEntity.ok(instituicaoRepositor.findOne(instituicaoId));
+            return ResponseEntity.ok(instituicaoRepository.findOne(instituicaoId));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar instituições");
         }
@@ -144,12 +149,61 @@ public class InstituicaoController {
     public String propostas() {
         return "propostas";
     }
+
+    @RequestMapping("/graficos")
+    public String graficos() {
+        return "graficos";
+    }
     
     @JsonView(View.Proposta.class)
     @RequestMapping(value = "/dash/propostas", method = RequestMethod.GET)
     public ResponseEntity findAllPropostasByInstituicaoId(Integer instituicaoId) {
         try {
-            return ResponseEntity.ok(propostaRepository.findAllByInstituicaoIdAndDataDeferimentoIsNull(instituicaoId));
+            return ResponseEntity.ok(propostaRepository.findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaDesc(instituicaoId));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
+        }
+    }
+    
+    @RequestMapping(value = "/dash/quantidadePropostas", method = RequestMethod.GET)
+    public ResponseEntity findAllPropostasByInstituicaoIdGroupedByDate(Integer instituicaoId) {
+        try {
+           
+            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdOrderByDataPropostaDesc(instituicaoId);
+            
+            List<QuantidadePropostaDTO> quantidadeList = new ArrayList<>();
+            Map<String, Integer> data = new HashMap<>();
+            String dataPropostaFormatada;
+            
+            if (propostas == null || propostas.isEmpty()) {
+                return ResponseEntity.ok(quantidadeList);
+            }
+            
+            for (Proposta proposta : propostas) {
+                
+                dataPropostaFormatada = proposta.getDataPropostaFormatada();
+                
+                if (data.containsKey(dataPropostaFormatada)) {
+                    data.put(
+                            dataPropostaFormatada, 
+                            data.get(dataPropostaFormatada) + 1
+                    );
+                } else {
+                    data.put(dataPropostaFormatada, 1);
+                }
+                
+            }  
+            
+            data.keySet().forEach((key) -> {
+                quantidadeList.add(
+                        new QuantidadePropostaDTO(
+                                key, 
+                                data.get(key)
+                        )
+                );
+            });
+            
+            return ResponseEntity.ok(quantidadeList);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
         }
