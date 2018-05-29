@@ -4,6 +4,7 @@ import br.com.doacao.webapp.entity.Instituicao;
 import br.com.doacao.webapp.entity.Login;
 import br.com.doacao.webapp.entity.Endereco;
 import br.com.doacao.webapp.entity.Proposta;
+import br.com.doacao.webapp.entity.StatusProposta;
 import br.com.doacao.webapp.repository.EnderecoRepository;
 import br.com.doacao.webapp.repository.GeolocationRepository;
 import br.com.doacao.webapp.repository.InstituicaoRepository;
@@ -11,7 +12,9 @@ import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.PropostaRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import util.DTO.QuantidadePropostaDTO;
+import util.DTO.GraficoPropostaDTO;
 import util.View;
 
 /**
@@ -166,12 +169,12 @@ public class InstituicaoController {
     }
     
     @RequestMapping(value = "/dash/quantidadePropostas", method = RequestMethod.GET)
-    public ResponseEntity findAllPropostasByInstituicaoIdGroupedByDate(Integer instituicaoId) {
+    public ResponseEntity quantidadePropostas(Integer instituicaoId) {
         try {
            
             List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdOrderByDataPropostaDesc(instituicaoId);
             
-            List<QuantidadePropostaDTO> quantidadeList = new ArrayList<>();
+            List<GraficoPropostaDTO> quantidadeList = new ArrayList<>();
             Map<String, Integer> data = new HashMap<>();
             String dataPropostaFormatada;
             
@@ -195,8 +198,105 @@ public class InstituicaoController {
             }  
             
             data.keySet().forEach((key) -> {
-                quantidadeList.add(
-                        new QuantidadePropostaDTO(
+                quantidadeList.add(new GraficoPropostaDTO(
+                                key, 
+                                data.get(key)
+                        )
+                );
+            });
+            
+            return ResponseEntity.ok(quantidadeList);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
+        }
+    }
+    
+    @RequestMapping(value = "/dash/propostasAceitas", method = RequestMethod.GET)
+    public ResponseEntity propostasAceitas(Integer instituicaoId) {
+        try {
+           
+            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoDesc(instituicaoId);
+
+            List<GraficoPropostaDTO> quantidadeList = new ArrayList<>();
+            
+            if (propostas == null || propostas.isEmpty()) {
+                return ResponseEntity.ok(quantidadeList);
+            }
+            
+            Map<String, Integer> data = new HashMap<>();
+            String mes;
+            
+            for (Proposta proposta : propostas) {
+            
+                if (proposta.getDataDeferimento().getYear() != ZonedDateTime.now().getYear()){
+                    continue;
+                }
+                
+                mes = proposta.getDataDeferimento().getMonth().toString();
+                
+                if (data.containsKey(proposta.getDataDeferimento().getMonth().toString())) {
+                    data.put(
+                            mes, 
+                            data.get(mes) + 1
+                    );
+                } else {
+                    data.put(mes, 1);
+                }
+                
+            }  
+            
+            data.keySet().forEach((key) -> {
+                quantidadeList.add(new GraficoPropostaDTO(
+                                key, 
+                                data.get(key)
+                        )
+                );
+            });
+            
+            return ResponseEntity.ok(quantidadeList);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
+        }
+    }
+    
+    @RequestMapping(value = "/dash/statusPropostas", method = RequestMethod.GET)
+    public ResponseEntity statusPropostas(Integer instituicaoId) {
+        try {
+           
+            List<Proposta> propostas = propostaRepository.findAllByInstituicaoId(instituicaoId);
+
+            List<GraficoPropostaDTO> quantidadeList = new ArrayList<>();
+            
+            if (propostas == null || propostas.isEmpty()) {
+                return ResponseEntity.ok(quantidadeList);
+            }
+            
+            Map<String, Integer> data = new HashMap<>();
+            StatusProposta statusProposta;
+            
+            for (Proposta proposta : propostas) {
+            
+                if (proposta.getDeferimento() == null) {
+                    statusProposta = StatusProposta.AGUARDANDO_PROCESSAMENTO;
+                }
+                else if (proposta.getDeferimento()){
+                    statusProposta = StatusProposta.DEFERIDA;
+                } else {
+                    statusProposta = StatusProposta.INDEFERIDA;
+                }
+                
+                if (data.containsKey(statusProposta.toString())) {
+                    data.put(
+                            statusProposta.toString(), 
+                            data.get(statusProposta.toString()) + 1
+                    );
+                } else {
+                    data.put(statusProposta.toString(), 1);
+                }
+            }  
+            
+            data.keySet().forEach((key) -> {
+                quantidadeList.add(new GraficoPropostaDTO(
                                 key, 
                                 data.get(key)
                         )

@@ -100,6 +100,14 @@ public class Proposta {
     public Instituicao getInstituicao() {
         return instituicao;
     }
+
+    public Boolean getDeferimento() {
+        return deferimento;
+    }
+
+    public void setDataDeferimento(ZonedDateTime dataDeferimento) {
+        this.dataDeferimento = dataDeferimento;
+    }
     
     public String getDataPropostaFormatada() {
         if (dataProposta == null) {

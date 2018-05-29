@@ -1,6 +1,12 @@
 $(document).ready(function () {
     $("#instituicaoNome").text(localStorage.getItem("instituicaoNome"));
+    
+        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
+            Chart.defaults.global.defaultFontColor = "#292b2c";
+    
     baixarQuantidadePropostas();
+    baixarPropostasAceitas();
+    baixarStatusPropostas();
 });
 
 function baixarQuantidadePropostas() {
@@ -16,6 +22,143 @@ function baixarQuantidadePropostas() {
             alert(data.responseText);
         }
     });
+}
+
+function baixarPropostasAceitas() {
+    $.ajax({
+        method: "GET",
+        url: "/instituicao/dash/propostasAceitas?instituicaoId=" + localStorage.getItem('instituicaoId'),
+        contentType: "application/JSON",
+        headers: {"Authorization": localStorage.getItem('token')},
+        success: function (data) {
+            exibirPropostasAceitas(data);
+        },
+        error: function (data) {
+            alert(data.responseText);
+        }
+    });
+}
+
+function baixarStatusPropostas() {
+    $.ajax({
+        method: "GET",
+        url: "/instituicao/dash/statusPropostas?instituicaoId=" + localStorage.getItem('instituicaoId'),
+        contentType: "application/JSON",
+        headers: {"Authorization": localStorage.getItem('token')},
+        success: function (data) {
+            exibirStatusPropostas(data);
+        },
+        error: function (data) {
+            alert(data.responseText);
+        }
+    });
+}
+
+function exibirStatusPropostas(statusPropostas) {
+
+    var labels = [];
+    var data = [];
+    
+    var maiorQuantidade = 0;
+
+    for (i = 0; i < statusPropostas.length; i++) {
+        labels.push(statusPropostas[i].data);
+        data.push(statusPropostas[i].quantidade);
+        
+        if (statusPropostas[i].quantidade > maiorQuantidade) {
+            maiorQuantidade = statusPropostas[i].quantidade;
+        }
+    }
+        
+    ctx = document.getElementById("myPieChart"), 
+    myPieChart = new Chart(
+            ctx, 
+            {
+                type: "pie", 
+                data: {
+                    labels: labels, 
+                    datasets: [
+                        {
+                            data: data, 
+                            backgroundColor: [
+                                "#007bff", 
+                                "#dc3545", 
+                                "#ffc107"
+                            ]
+                        }
+                    ]
+                }
+            }
+    );
+}
+
+
+function exibirPropostasAceitas(propostasAceitas) {
+
+    var labels = [];
+    var data = [];
+    
+    var maiorQuantidade = 0;
+
+    for (i = 0; i < propostasAceitas.length; i++) {
+        labels.push(propostasAceitas[i].data);
+        data.push(propostasAceitas[i].quantidade);
+        
+        if (propostasAceitas[i].quantidade > maiorQuantidade) {
+            maiorQuantidade = propostasAceitas[i].quantidade;
+        }
+    }
+    
+    ctx = document.getElementById("myBarChart"),
+        myLineChart = new Chart(
+                ctx, 
+                {
+                    type: "bar", 
+                    data: {
+                        labels: labels, 
+                        datasets: [
+                            {
+                                label: "Revenue", 
+                                backgroundColor: "rgba(2,117,216,1)", 
+                                borderColor: "rgba(2,117,216,1)", 
+                                data: data
+                            }
+                        ]
+                    }, 
+                    options: {
+                        scales: {
+                            xAxes: [
+                                {
+                                    time: {
+                                        unit: "month"
+                                    }, 
+                                    gridLines: {
+                                        display: !1
+                                    }, 
+                                    ticks: {
+                                        maxTicksLimit: 6
+                                    }
+                                }
+                            ], 
+                            yAxes: [
+                                {
+                                    ticks: {
+                                        min: 0, 
+                                        max: maiorQuantidade, 
+                                        maxTicksLimit: 5
+                                    }, 
+                                    gridLines: {
+                                        display: !0
+                                    }
+                                }
+                            ]
+                        }, 
+                        legend: {
+                            display: !1
+                        }
+                    }
+                }
+        );
 }
 
 function exibirQuantidadePropostas(quantidadePropostas) {
@@ -34,9 +177,6 @@ function exibirQuantidadePropostas(quantidadePropostas) {
         }
     }
 
-
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
-            Chart.defaults.global.defaultFontColor = "#292b2c";
 
     var ctx = document.getElementById("myAreaChart"),
             myLineChart = new Chart(ctx, {type: "line",
@@ -92,9 +232,6 @@ function exibirQuantidadePropostas(quantidadePropostas) {
                     }
                 }
             }
-            ),
-            ctx = document.getElementById("myBarChart"),
-        myLineChart = new Chart(
-                ctx, {type: "bar", data: {labels: ["January", "February", "March", "April", "May", "June"], datasets: [{label: "Revenue", backgroundColor: "rgba(2,117,216,1)", borderColor: "rgba(2,117,216,1)", data: [4215, 5312, 6251, 7841, 9821, 14984]}]}, options: {scales: {xAxes: [{time: {unit: "month"}, gridLines: {display: !1}, ticks: {maxTicksLimit: 6}}], yAxes: [{ticks: {min: 0, max: 15e3, maxTicksLimit: 5}, gridLines: {display: !0}}]}, legend: {display: !1}}}), ctx = document.getElementById("myPieChart"), myPieChart = new Chart(ctx, {type: "pie", data: {labels: ["Blue", "Red", "Yellow", "Green"], datasets: [{data: [12.21, 15.58, 11.25, 8.32], backgroundColor: ["#007bff", "#dc3545", "#ffc107", "#28a745"]}]}});
+            );            
         
 }

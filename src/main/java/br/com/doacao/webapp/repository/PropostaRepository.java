@@ -13,4 +13,8 @@ public interface PropostaRepository extends JpaRepository<Proposta, Integer> {
     public List<Proposta>findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaDesc(Integer instituicaoId);
     
     public List<Proposta>findAllByInstituicaoIdOrderByDataPropostaDesc(Integer instituicaoId);
+
+    public List<Proposta> findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoDesc(Integer instituicaoId);
+
+    public List<Proposta> findAllByInstituicaoId(Integer instituicaoId);
 }
