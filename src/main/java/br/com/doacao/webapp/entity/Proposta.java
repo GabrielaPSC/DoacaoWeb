@@ -105,6 +105,10 @@ public class Proposta {
         return deferimento;
     }
 
+    public void setDeferimento(Boolean deferimento) {
+        this.deferimento = deferimento;
+    }
+
     public void setDataDeferimento(ZonedDateTime dataDeferimento) {
         this.dataDeferimento = dataDeferimento;
     }

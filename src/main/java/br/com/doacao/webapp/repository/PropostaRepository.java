@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PropostaRepository extends JpaRepository<Proposta, Integer> {
 
-    public List<Proposta>findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaDesc(Integer instituicaoId);
+    public List<Proposta>findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaAsc(Integer instituicaoId);
     
-    public List<Proposta>findAllByInstituicaoIdOrderByDataPropostaDesc(Integer instituicaoId);
+    public List<Proposta>findAllByInstituicaoIdOrderByDataPropostaAsc(Integer instituicaoId);
 
-    public List<Proposta> findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoDesc(Integer instituicaoId);
+    public List<Proposta> findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoAsc(Integer instituicaoId);
 
     public List<Proposta> findAllByInstituicaoId(Integer instituicaoId);
 }

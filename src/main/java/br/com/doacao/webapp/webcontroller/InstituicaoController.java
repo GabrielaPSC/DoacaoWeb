@@ -14,6 +14,7 @@ import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -162,7 +163,7 @@ public class InstituicaoController {
     @RequestMapping(value = "/dash/propostas", method = RequestMethod.GET)
     public ResponseEntity findAllPropostasByInstituicaoId(Integer instituicaoId) {
         try {
-            return ResponseEntity.ok(propostaRepository.findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaDesc(instituicaoId));
+            return ResponseEntity.ok(propostaRepository.findAllByInstituicaoIdAndDataDeferimentoIsNullOrderByDataPropostaAsc(instituicaoId));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
         }
@@ -172,7 +173,7 @@ public class InstituicaoController {
     public ResponseEntity quantidadePropostas(Integer instituicaoId) {
         try {
            
-            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdOrderByDataPropostaDesc(instituicaoId);
+            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdOrderByDataPropostaAsc(instituicaoId);
             
             List<GraficoPropostaDTO> quantidadeList = new ArrayList<>();
             Map<String, Integer> data = new HashMap<>();
@@ -205,6 +206,9 @@ public class InstituicaoController {
                 );
             });
             
+            Collections.sort(quantidadeList, 
+                        (o1, o2) -> o1.getData().compareTo(o2.getData()));
+            
             return ResponseEntity.ok(quantidadeList);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
@@ -214,8 +218,7 @@ public class InstituicaoController {
     @RequestMapping(value = "/dash/propostasAceitas", method = RequestMethod.GET)
     public ResponseEntity propostasAceitas(Integer instituicaoId) {
         try {
-           
-            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoDesc(instituicaoId);
+            List<Proposta> propostas = propostaRepository.findAllByInstituicaoIdAndDeferimentoTrueOrderByDataDeferimentoAsc(instituicaoId);
 
             List<GraficoPropostaDTO> quantidadeList = new ArrayList<>();
             
@@ -252,6 +255,9 @@ public class InstituicaoController {
                         )
                 );
             });
+            
+            Collections.sort(quantidadeList, 
+                        (o1, o2) -> o1.getData().compareTo(o2.getData()));
             
             return ResponseEntity.ok(quantidadeList);
         } catch (Exception ex) {
@@ -306,6 +312,26 @@ public class InstituicaoController {
             return ResponseEntity.ok(quantidadeList);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao recuperar propostas");
+        }
+    }
+    
+    @RequestMapping(value = "/dash/deferirProposta", method = RequestMethod.GET)
+    public ResponseEntity deferirProposta(Boolean deferido, Integer propostaId) {
+        try {
+            Proposta proposta = propostaRepository.findOne(propostaId);
+            
+            if(proposta == null) {
+                return ResponseEntity.badRequest().body("Proposta não encontrada");
+            }
+
+            proposta.setDataDeferimento(ZonedDateTime.now());
+            proposta.setDeferimento(deferido);
+            
+            propostaRepository.save(proposta);
+            
+            return ResponseEntity.ok("Status da proposta alterado com sucesso");
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao alterar status da proposta");
         }
     }
 }
