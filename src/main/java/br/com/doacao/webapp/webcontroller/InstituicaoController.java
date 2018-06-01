@@ -3,12 +3,14 @@ package br.com.doacao.webapp.webcontroller;
 import br.com.doacao.webapp.entity.Instituicao;
 import br.com.doacao.webapp.entity.Login;
 import br.com.doacao.webapp.entity.Endereco;
+import br.com.doacao.webapp.entity.Necessidade;
 import br.com.doacao.webapp.entity.Proposta;
 import br.com.doacao.webapp.entity.StatusProposta;
 import br.com.doacao.webapp.repository.EnderecoRepository;
 import br.com.doacao.webapp.repository.GeolocationRepository;
 import br.com.doacao.webapp.repository.InstituicaoRepository;
 import br.com.doacao.webapp.repository.LoginRepository;
+import br.com.doacao.webapp.repository.NecessidadeRepository;
 import br.com.doacao.webapp.repository.PropostaRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -45,15 +47,16 @@ public class InstituicaoController {
     private final LoginRepository loginRepository;
     private final TokenDataRepository tokenDataRepository;
     private final PropostaRepository propostaRepository;
+    private final NecessidadeRepository necessidadeRepository;
 
-    @Autowired
-    public InstituicaoController(InstituicaoRepository instituicaoRepositor, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository, PropostaRepository propostaRepository) {
-        this.instituicaoRepository = instituicaoRepositor;
+    public InstituicaoController(InstituicaoRepository instituicaoRepository, EnderecoRepository enderecoRepository, GeolocationRepository geolocationRepository, LoginRepository loginRepository, TokenDataRepository tokenDataRepository, PropostaRepository propostaRepository, NecessidadeRepository necessidadeRepository) {
+        this.instituicaoRepository = instituicaoRepository;
         this.enderecoRepository = enderecoRepository;
         this.geolocationRepository = geolocationRepository;
         this.loginRepository = loginRepository;
         this.tokenDataRepository = tokenDataRepository;
         this.propostaRepository = propostaRepository;
+        this.necessidadeRepository = necessidadeRepository;
     }
 
     @RequestMapping("/cadastro")
@@ -157,6 +160,11 @@ public class InstituicaoController {
     @RequestMapping("/graficos")
     public String graficos() {
         return "graficos";
+    }
+    
+    @RequestMapping("/necessidades")
+    public String necessidades() {
+        return "necessidades";
     }
     
     @JsonView(View.Proposta.class)
@@ -332,6 +340,39 @@ public class InstituicaoController {
             return ResponseEntity.ok("Status da proposta alterado com sucesso");
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Erro ao alterar status da proposta");
+        }
+    }
+    
+    @JsonView(View.Necessidade.class)
+    @RequestMapping(value = "/dash/registrarNecessidade", method = RequestMethod.POST)
+    public ResponseEntity registrarNecessidade(@RequestBody Necessidade necessidade) {
+        try {
+            necessidade.setInstituicao(instituicaoRepository.findOne(necessidade.getInstituicao().getId()));
+            Necessidade necessidadeSalva = necessidadeRepository.save(necessidade);
+            return ResponseEntity.ok(necessidadeSalva);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao salvar necessidade");
+        }
+    }
+    
+    @JsonView(View.Necessidade.class)
+    @RequestMapping(value = "/baixarNecessidades", method = RequestMethod.GET)
+    public ResponseEntity baixarNecessidades(Integer instituicaoId) {
+        try {
+            return ResponseEntity.ok(necessidadeRepository.findAllByInstituicaoId(instituicaoId));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao salvar necessidade");
+        }
+    }
+    
+    @RequestMapping(value = "/dash/removerNecessidade", method = RequestMethod.GET)
+    public ResponseEntity removerNecessidade(Integer necessidadeId) {
+        try {
+            necessidadeRepository.delete(necessidadeId);
+            
+            return ResponseEntity.ok("Necessidade removida com sucesso");
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao remover necessidade");
         }
     }
 }

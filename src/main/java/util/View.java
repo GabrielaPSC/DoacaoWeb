@@ -14,4 +14,6 @@ public class View {
     public interface InstituicaoDetalhada{};
     
     public interface Proposta{};
+    
+    public interface Necessidade{};
 }
