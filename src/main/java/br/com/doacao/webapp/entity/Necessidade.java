@@ -17,13 +17,13 @@ public class Necessidade {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @JsonView(View.Necessidade.class)
+    @JsonView({View.Necessidade.class, View.InstituicaoDetalhada.class})
     private Integer id;
     
-    @JsonView(View.Necessidade.class)
+    @JsonView({View.Necessidade.class, View.InstituicaoDetalhada.class})
     private String necessidade;
     
-    @JsonView(View.Necessidade.class)
+    @JsonView({View.Necessidade.class, View.InstituicaoDetalhada.class})
     private Integer quantidade;
     
     @ManyToOne

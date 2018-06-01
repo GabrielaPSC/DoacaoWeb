@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import util.DTO.GraficoPropostaDTO;
+import util.DTO.InstituicaoDetalhadaDTO;
 import util.View;
 
 /**
@@ -141,9 +142,14 @@ public class InstituicaoController {
     @RequestMapping(value = "/detalhes", method = RequestMethod.GET)
     public ResponseEntity findDetalhes(@RequestParam Integer instituicaoId) {
         try {
-            return ResponseEntity.ok(instituicaoRepository.findOne(instituicaoId));
+            return ResponseEntity.ok(
+                    new InstituicaoDetalhadaDTO(
+                        instituicaoRepository.findOne(instituicaoId),
+                        necessidadeRepository.findAllByInstituicaoId(instituicaoId)
+                    )
+            );
         } catch (Exception ex) {
-            return ResponseEntity.badRequest().body("Erro ao recuperar instituições");
+            return ResponseEntity.badRequest().body("Erro ao recuperar instituição");
         }
     }
 
