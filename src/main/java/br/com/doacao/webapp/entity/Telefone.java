@@ -21,6 +21,9 @@ public class Telefone {
     @JsonView({View.InstituicaoDetalhada.class})
     private String telefone;
 
+    public Telefone() {
+    }
+    
     public Telefone(String telefone) {
         this.telefone = telefone;
     }

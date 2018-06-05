@@ -3,9 +3,9 @@ $("#btn-login").click(logar);
 
 function logar() {
 
-    var necessidade = {};
-    login["necessidade"] = document.getElementById("txt_necessidade").value;
-    login["quantidade"] = document.getElementById("txt_quantidade").value;
+    var login = {};
+    login["usuario"] = document.getElementById("txt-email").value;
+    login["senha"] = document.getElementById("txt-senha").value;
 
     $.ajax({
         method: "POST",

@@ -381,4 +381,13 @@ public class InstituicaoController {
             return ResponseEntity.badRequest().body("Erro ao remover necessidade");
         }
     }
+    
+    @RequestMapping(value = "/novaProposta", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity novaProposta(@RequestBody Proposta proposta) {
+        try {
+            return ResponseEntity.ok(propostaRepository.save(proposta));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao enviar proposta");
+        }
+    }
 }
