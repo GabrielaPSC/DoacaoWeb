@@ -8,5 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Gabriela Santos
  */
 public interface TokenDataRepository extends JpaRepository<TokenData, String>{
+
+    public void deleteAllByInstituicaoId(Integer instituicaoId);
     
 }

@@ -19,15 +19,15 @@ public class Geolocation {
     private Integer id;
     
     @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
-    private Integer latitude;
+    private Double latitude;
     
     @JsonView({View.Instituicao.class, View.InstituicaoDetalhada.class})
-    private Integer longitude;
+    private Double longitude;
 
     public Geolocation() {
     }
 
-    public Geolocation(Integer latitude, Integer longitude) {
+    public Geolocation(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -36,11 +36,11 @@ public class Geolocation {
         return id;
     }
 
-    public Integer getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public Integer getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
     

@@ -6,6 +6,7 @@ import br.com.doacao.webapp.repository.LoginRepository;
 import br.com.doacao.webapp.repository.TokenDataRepository;
 import java.util.HashMap;
 import java.util.Map;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,19 @@ public class LoginController {
         }
         
         return ResponseEntity.badRequest().body("Credenciais inválidas");
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ResponseEntity novaProposta(Integer instituicaoId) {
+        try {
+            
+            tokenDataRepository.deleteAllByInstituicaoId(instituicaoId);
+            
+            return ResponseEntity.ok("ok");
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Erro ao fazer logout");
+        }
     }
     
 }

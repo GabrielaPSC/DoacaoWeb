@@ -92,9 +92,9 @@ public class InstituicaoController {
         if (endereco.getEstado() == null) {
             return ResponseEntity.badRequest().body("Estado da instituição inválido.");
         }
-        if (endereco.getPais() == null) {
+       /** if (endereco.getPais() == null) {
             return ResponseEntity.badRequest().body("País da instituição inválido.");
-        }
+        }*/
         if (instituicao.getGeolocation() == null) {
             return ResponseEntity.badRequest().body("Localização da instituição inválido.");
         }
@@ -104,7 +104,7 @@ public class InstituicaoController {
         if (instituicao.getNome() == null) {
             return ResponseEntity.badRequest().body("Nome da instituição inválido.");
         }
-        if (instituicao.getTelefones() == null) {
+        /*if (instituicao.getTelefones() == null) {
             return ResponseEntity.badRequest().body("Telefone da instituição inválido.");
         }
         if (instituicao.getTipo() == null) {
@@ -112,7 +112,7 @@ public class InstituicaoController {
         }
         if (instituicao.getDocumentos() == null) {
             return ResponseEntity.badRequest().body("Documentos da instituição inválidos.");
-        }
+        }*/
        
         loginRepository.save(instituicao.getLogin());
         enderecoRepository.save(instituicao.getEndereco());

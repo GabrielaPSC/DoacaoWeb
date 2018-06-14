@@ -14,6 +14,7 @@ var locationValue;
 var coords;
 
 txtNome     = document.getElementById("inputNome");  
+txtTelefone = document.getElementById("inputTelefone");  
 txtEmail    = document.getElementById("inputEmail");
 txtSenha    = document.getElementById("inputSenha");
 // getting address value
@@ -23,7 +24,7 @@ txtComplemento = document.getElementById("inputComplemento");
 txtBairro   = document.getElementById("inputBairro");
 txtCidade   = document.getElementById("inputCidade");
 txtEstado   = document.getElementById("inputEstado");
-txtPais     = document.getElementById("inputPais");
+//txtPais     = document.getElementById("inputPais");
 
 txtEndereco.addEventListener('focusout', getValue, false);
 txtNumero.addEventListener('focusout', getValue, false);
@@ -83,7 +84,7 @@ function cadastrar() {
     endereco["bairro"]    = txtBairro.value;
     endereco["cidade"]    = txtCidade.value;
     endereco["estado"]    = txtEstado.value;
-    endereco["pais"]      = txtPais.value;
+    //endereco["pais"]      = txtPais.value;
     
     var geolocation = {};
     geolocation["latitude"]  = coords.lat;
@@ -95,6 +96,7 @@ function cadastrar() {
     
     var instituicao = {};
     instituicao["nome"]        = txtNome.value;
+    instituicao["telefone"]    = txtTelefone.value;
     instituicao["senha"]       = txtSenha.value;
     instituicao["login"]       = login;
     instituicao["endereco"]    = endereco;
@@ -106,7 +108,7 @@ function cadastrar() {
         data: JSON.stringify(instituicao),
         contentType: "application/JSON",
         success: function(data){
-            alert(data);
+            document.location.href = "/login";
         },
         error: function(data){
             alert(data.responseText);
